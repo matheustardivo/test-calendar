@@ -1,0 +1,21 @@
+<h3>Authorized email address</h3>
+<p><%= @email || ":(" %></p>
+<h3>Token</h3>
+<p><%= @access_token.token %></p>
+<h3>Secret</h3>
+<p><%= @access_token.secret %></p>
+
+<h1>Data</h1>
+<% @data["data"]["items"].each do |event| %>
+<div id="<%= event['id'] %>">
+  <p>
+    <strong>Title: </strong><%= event['title'] %><br />
+    <strong>Details: </strong><%= event['details'] %><br />
+    <% if event['when'] %>
+      <strong>Start: </strong><%= event['when'].first["start"] %><br />
+      <strong>End: </strong><%= event['when'].first["end"] %><br />
+    <% end %>
+    <strong>Raw: </strong><%= event %>
+  </p>
+</div>
+<% end %>

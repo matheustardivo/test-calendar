@@ -5,7 +5,7 @@ require 'rexml/document'
 module Google
   
   class Client
-    attr_accessor :oauth_token
+    attr_accessor :token
     attr_accessor :version
     
     def initialize(token, version = '1.0')
@@ -13,7 +13,7 @@ module Google
       @version = version
     end
   
-    def get(base, query_parameters)
+    def get(base, query_parameters = {})
       make_request(:get, url(base, query_parameters))
     end
     
@@ -28,17 +28,17 @@ module Google
     end
 
     private  
-        
-    def url(base, query_parameters={})
-      url = base
-      unless query_parameters.empty?
-        url += '?'
-        query_parameters.each {|key, value| url += "#{CGI::escape(key)}=#{CGI::escape(value)}&"}
+      def url(base, query_parameters)
+        puts "base: #{base}"
+        puts "query_parameters: #{query_parameters}"
+        url = base + '?alt=jsonc&'
+        unless query_parameters.empty?
+          query_parameters.each {|key, value| url += "#{CGI::escape(key)}=#{CGI::escape(value)}&"}
+        end
         url.chop!
+        url
       end
-      url
-    end
+      
   end
-
 end
 

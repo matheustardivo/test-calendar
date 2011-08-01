@@ -12,4 +12,9 @@ class App < Sinatra::Application
     raise auth
   end
   
+  post '/auth/:name/callback' do
+    auth = request.env['omniauth.auth']
+    raise auth
+  end
+  
 end

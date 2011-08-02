@@ -6,14 +6,11 @@ require 'oauth/consumer'
   
 class App < Sinatra::Application
   
-  CONSUMER_KEY = 'financeiro.tardivo.org'
-  CONSUMER_SECRET = 'fGtcY96x++/EVnfq3mA/ULQ/'
-  
   before do
     session[:oauth] ||= {}  
 
-    consumer_key = CONSUMER_KEY
-    consumer_secret = CONSUMER_SECRET
+    consumer_key = ENV['CONSUMER_KEY']
+    consumer_secret = ENV['CONSUMER_SECRET']
 
     @consumer ||= OAuth::Consumer.new(consumer_key, consumer_secret,
       :site => "https://www.google.com",
@@ -66,7 +63,8 @@ class App < Sinatra::Application
 EOF
 
     if @access_token
-      response = @access_token.post('https://www.google.com/calendar/feeds/default/private/full', json_string, { 'Accept'=>'application/json', 'Content-Type' => 'application/json' })
+      response = @access_token.post('https://www.google.com/calendar/feeds/default/private/full', json_string, 
+                                    { 'Accept'=>'application/json', 'Content-Type' => 'application/json' })
       if response.is_a?(Net::HTTPSuccess)
         puts "response.body: #{response.body}"
         redirect "/"
@@ -76,9 +74,9 @@ EOF
     end
   end
   
-  get "/delete" do
+  get "/delete/:id" do
     if @access_token
-      response = @access_token.delete('https://www.google.com/calendar/feeds/default/private/full/u8ke6vhamhg8djobv821rgb2g8')
+      response = @access_token.delete("http://www.google.com/calendar/feeds/default/private/full/#{params[:id]}")
       if response.is_a?(Net::HTTPSuccess)
         puts "response.body: #{response.body}"
         redirect "/"
